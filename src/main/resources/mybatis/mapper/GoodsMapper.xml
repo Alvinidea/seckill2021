@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alvin.seckill.mapper.GoodsMapper">
+
+    <!-- 数据库表 与 Java类字段的映射-->
+    <resultMap id="GoodsBaseResultMap" type="com.alvin.seckill.pojo.GoodsVo">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="goods_title" property="goodsTitle" jdbcType="VARCHAR" />
+        <result column="goods_img" property="goodsImg" jdbcType="VARCHAR" />
+        <result column="goods_detail" property="goodsDetail" jdbcType="VARCHAR" />
+        <result column="goods_price" property="goodsPrice" jdbcType="DECIMAL" />
+        <result column="goods_stock" property="goodsStock" jdbcType="INTEGER" />
+        <result column="seckill_price" property="seckillPrice" jdbcType="DECIMAL" />
+        <result column="stock_count" property="stockCount" jdbcType="INTEGER" />
+        <result column="start_date" property="startDate" jdbcType="DATE" />
+        <result column="end_date" property="endDate" jdbcType="DATE" />
+    </resultMap>
+
+    <!--
+        resultMap: 进行一次类型映射
+        resultType: 直接使用Java的类
+    -->
+    <select id="getGoodsVoList" resultMap="GoodsBaseResultMap" >
+        select g.*, sg.stock_count, sg.start_date, sg.end_date,sg.seckill_price
+        from seckill_goods sg left join goods g
+        on sg.goods_id = g.id
+    </select>
+
+    <!--
+    <select id="getGoodsVoList" resultType="GoodsVo">
+        select g.*, sg.stock_count, sg.start_date, sg.end_date,sg.seckill_price
+        from seckill_goods sg left join goods g
+        on sg.goods_id = g.id
+    </select>-->
+
+    <select id="getGoodsVoByGoodsId" resultMap="GoodsBaseResultMap"  parameterType="long">
+        select g.*, sg.stock_count, sg.start_date, sg.end_date, sg.seckill_price
+        from seckill_goods sg left join goods g
+        on sg.goods_id = g.id
+        where g.id = #{goodsId}
+    </select>
+
+    <update id="reduceStock" parameterType="SeckillGoods">
+        update seckill_goods
+        set stock_count = stock_count-1
+        where goods_id = #{goodsId} and stock_count > 0
+    </update>
+</mapper>

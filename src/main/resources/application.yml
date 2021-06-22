@@ -1,0 +1,61 @@
+spring:
+# thymeleaf:
+  #    prefix: /templates/ # 设置thymeleaf路径默认为src/main/resources/templates
+  #    suffix: .html       # 设置thymeleaf模板后缀
+  #    servlet:
+  #      content-type: text/html #
+  #    cache: true       # 是否开启缓存默认为true
+  #    mode: LEGACYHTML5 # 设置thymeleaf严格校验
+  #    encoding: UTF-8   # 设置编码
+  mvc:
+    # static-path-pattern: /static/** # springboot+thymeleaf的时候又发现在运行的时候，静态资源无法展示
+    favicon:
+      enabled: false # 令之前的图标失效（Deprecated configuration property 'spring.mvc.favicon.enabled' 但是可以使用）
+  datasource:
+    # -----------------------------------------------------------
+    #  datasource 配置
+    # serverTimezone=UTC    时区配置
+    # useUnicode=true       编码配置
+    # characterEncoding=utf-8 编码配置
+    # -----------------------------------------------------------
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: root #数据库用户名
+    password: hcf960228 # mysql密码
+    # 需要 pom 中配置jar
+    # com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # -----------------------------------------------------------
+    #  druid 配置
+    #     type: com.alibaba.druid.pool.DruidDataSource
+    # -----------------------------------------------------------
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 配置监控统计拦截的filters，
+    # stat：监控统计、 http://localhost:8080/druid/login.html
+    # log4j：日志记录、
+    # wall：防御sql注入
+    # log4j需要导入maven依赖（jar包）
+    filters: stat,wall,log4j
+    maxActive: 100
+    initialSize: 100
+    maxWait: 600
+    minIdle: 50
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+
+# 整合 Mybatis
+mybatis:
+  # typeAliasesPackage：它一般对应我们的实体类所在的包，这个时候会自动取对应包中不包括包名的简单类名作为包括包名的别名。
+  # 多个package之间可以用逗号或者分号等来进行分隔。
+  type-aliases-package: com.alvin.seckill.pojo
+  # mapperLocations：它表示我们的Mapper文件存放的位置，当我们的Mapper文件跟对应的Mapper接口
+  # 处于同一位置的时候可以不用指定该属性的值。
+  # 但是Mybatis中一般放置在resources的mybatis/mapper中
+  mapper-locations: classpath:mybatis/mapper/*.xml
+

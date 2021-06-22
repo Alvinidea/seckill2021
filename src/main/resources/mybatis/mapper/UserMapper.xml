@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alvin.seckill.mapper.UserMapper">
+
+    <!-- 数据库表 与 Java类字段的映射-->
+    <resultMap id="BaseResultMap" type="User">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="BIGINT" />
+        <result column="salt" property="salt" jdbcType="VARCHAR" />
+        <result column="head" property="head" jdbcType="VARCHAR" />
+        <result column="register_date" property="register_date" jdbcType="TIMESTAMP" />
+        <result column="last_login_date" property="last_login_date" jdbcType="TIMESTAMP" />
+        <result column="login_count" property="login_count" jdbcType="BIGINT" />
+    </resultMap>
+
+    <sql id="base_column">
+    id,nickname,password,salt,head,register_date,last_login_date,login_count
+    </sql>
+    <!--
+        可以使用resultMap = BaseResultMap
+    -->
+    <select id="getByNickname" resultMap="BaseResultMap">
+        select <include refid="base_column"/>
+        from user
+        where nickname=#{nickname}
+    </select>
+
+    <select id="getById" resultType="User">
+        select <include refid="base_column"/>
+        from user
+        where id=#{id}
+    </select>
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user
+        (id , nickname ,password , salt ,head,register_date,last_login_date)
+        value(#{id},#{nickname},#{password},#{salt},#{head}, #{register_date},#{last_login_date})
+    </insert>
+
+    <update id="update" parameterType="User">
+        update user set password = #{password} where id = #{id}
+    </update>
+
+    <select id="getCountByUserName" resultType="int">
+        select count(*)
+        from user where nickname = #{userName}
+    </select>
+</mapper>
+
+
+<!--
+https://mybatis.org/mybatis-3/zh/index.html
+中下载模板
+https://mybatis.org/mybatis-3/zh/getting-started.html
+-->
+
+<!--
+解决IDEA中springboot整合mybatis中出现的Invalid bound statement(not found)的问题
+: https://blog.csdn.net/benben513624/article/details/81076182?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
+-->
